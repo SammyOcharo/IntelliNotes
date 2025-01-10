@@ -12,7 +12,8 @@ Here’s a comprehensive structure for your **GitHub README file** that will eff
 
 This is a microservices-based system designed for university students to upload their course outlines and receive
 AI-generated notes and revision questions.
-The platform leverages modern technologies such as Java Spring Boot, Kafka, and OpenAI APIs to provide a seamless experience for students and educators.
+The platform leverages modern technologies such as Java Spring Boot, Kafka, and OpenAI APIs
+to provide a seamless experience for students and educators.
 
 ---
 
