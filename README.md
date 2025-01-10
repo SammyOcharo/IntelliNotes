@@ -81,7 +81,12 @@ The system follows a **microservices architecture** with the following component
 ## System Architecture Diagram
 https://raw.githubusercontent.com/SammyOcharo/IntelliNotes/ebbf5b25cdfa5c6929e16f53058bc91cae7358f7/Drawing.drawio.svg
 ![System Architecture](https://avatars.githubusercontent.com/u/63811481?s=400&u=1fa8f89bc6f4c07b26ae1d8e9395c22fd474595f&v=4)
+
+
 ---
+
+![Alt text](https://raw.github.com/potherca-blog/StackOverflow/master/question.13808020.include-an-svg-hosted-on-github-in-markdown/controllers_brief.svg)
+<img src="https://raw.github.com/potherca-blog/StackOverflow/master/question.13808020.include-an-svg-hosted-on-github-in-markdown/controllers_brief.svg">
 
 ## Setup Instructions
 
