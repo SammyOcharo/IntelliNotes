@@ -29,8 +29,10 @@ to provide a seamless experience for students and educators.
 
 ---
 
-Design Architecture
+## System Architecture
+
 ![System Architecture](https://github.com/SammyOcharo/IntelliNotes/blob/main/Drawing.drawio.svg)
+
 
 
 ## Architecture Overview
