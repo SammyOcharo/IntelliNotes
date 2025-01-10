@@ -213,6 +213,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 - **Email**: obanyisammy@gmail.com  
 - **GitHub**: [SammyOcharo](https://github.com/SammyOcharo)
 
----
-
 ```
