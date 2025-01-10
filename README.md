@@ -76,7 +76,7 @@ The system follows a **microservices architecture** with the following component
 ---
 
 ## System Architecture Diagram
-![System Architecture](https://raw.githubusercontent.com/SammyOcharo/IntelliNotes/ebbf5b25cdfa5c6929e16f53058bc91cae7358f7/Drawing.drawio.svg)
+![System Architecture](https://raw.githubusercontent.com/SammyOcharo/IntelliNotes/refs/heads/main/Drawing.jpg)
 
 
 ## Setup Instructions
