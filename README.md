@@ -75,8 +75,7 @@ The system follows a **microservices architecture** with the following component
 
 ---
 
-## System Architecture Diagram
-![System Architecture](https://raw.githubusercontent.com/SammyOcharo/IntelliNotes/refs/heads/main/Drawing.jpg)
+
 
 
 ## Setup Instructions
@@ -96,6 +95,9 @@ The system follows a **microservices architecture** with the following component
    git clone https://github.com/your-username/your-repo-name.git
    cd your-repo-name
    ```
+
+## System Architecture Diagram
+![System Architecture](https://raw.githubusercontent.com/SammyOcharo/IntelliNotes/refs/heads/main/Drawing.jpg)
 
 2. Set up environment variables:
    - Create a `.env` file with the following:
