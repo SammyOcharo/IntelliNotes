@@ -97,7 +97,7 @@ The system follows a **microservices architecture** with the following component
    ```
 
 ## System Architecture Diagram
-![System Architecture](https://raw.githubusercontent.com/SammyOcharo/IntelliNotes/refs/heads/main/Drawing.jpg)
+![System Architecture](https://raw.githubusercontent.com/SammyOcharo/IntelliNotes/358a7aa68690594357a6f0b40817b5340d118a0a/Drawing.drawio.svg)
 
 2. Set up environment variables:
    - Create a `.env` file with the following:
