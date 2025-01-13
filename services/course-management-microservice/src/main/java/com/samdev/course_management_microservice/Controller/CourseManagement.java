@@ -46,30 +46,30 @@ public class CourseManagement {
     }
 
     //List All registered units
-    @GetMapping("/get-all-units")
+    @GetMapping("/get-all-units/")
     public ResponseEntity<List<CourseResponse>> listAllUnits(){
         return ResponseEntity.ok(courseManagementService.listAllUnits());
     }
 
     //List unit per id
-    @GetMapping("/get-unit/{id}")
+    @GetMapping("/get-unit/{id}/")
     public ResponseEntity<CourseResponse> getUnit(@PathVariable("id") Long id){
         return ResponseEntity.ok(courseManagementService.getUnit(id));
     }
 
     //Delete a unit
-    @DeleteMapping("/delete-unit/{id}")
+    @DeleteMapping("/delete-unit/{id}/")
     public ResponseEntity<CourseResponse> deleteUnit(@PathVariable("id") Long id){
         return ResponseEntity.ok(courseManagementService.deleteUnit(id));
     }
 
     //Delete multiple units
-    @DeleteMapping
-    public ResponseEntity<CourseResponse> deleteMultipleUnits(Map<Integer, Integer> unitInfo){
+    @DeleteMapping("/multiple-delete/")
+    public ResponseEntity<CourseResponse> deleteMultipleUnits(@RequestBody @Valid Map<Integer, Integer> unitInfo){
         return ResponseEntity.ok(courseManagementService.deleteMultipleUnits(unitInfo));
     }
     //Delete course
-    @DeleteMapping("/get-course/{id}")
+    @DeleteMapping("/get-course/{id}/")
     public ResponseEntity<CourseResponse> deleteCourse(@PathVariable("id") Long id){
         return ResponseEntity.ok(courseManagementService.deleteCourse(id));
     }

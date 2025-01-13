@@ -27,4 +27,3 @@ aws:
     bucketName: ${BUCKET_NAME}
     accessKey: ${ACCESS_KEY}
     secretKey: ${SECRET_KEY}
-
