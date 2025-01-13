@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -15,15 +16,14 @@ public class Course {
     @NotNull(message="Course name is required")
     private String courseName;
     @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private String createdAt;
+    private LocalDateTime createdAt;
     @OneToMany(mappedBy="course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Unit> units;
 
     public Course() {
     }
 
-    public Course(String courseName, Long courseId, String createdAt, List<Unit> units) {
+    public Course(String courseName, Long courseId, LocalDateTime createdAt, List<Unit> units) {
         this.courseName = courseName;
         this.courseId = courseId;
         this.createdAt = createdAt;
@@ -38,7 +38,7 @@ public class Course {
         return courseId;
     }
 
-    public String getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
@@ -50,7 +50,7 @@ public class Course {
         this.courseName = courseName;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
