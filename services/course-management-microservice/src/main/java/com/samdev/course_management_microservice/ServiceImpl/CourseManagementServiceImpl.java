@@ -1,11 +1,5 @@
 package com.samdev.course_management_microservice.ServiceImpl;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.samdev.course_management_microservice.AWS.AwsUtil;
 import com.samdev.course_management_microservice.Entity.Course;
 import com.samdev.course_management_microservice.Exceptions.*;
@@ -16,19 +10,14 @@ import com.samdev.course_management_microservice.Request.CourseRequest;
 import com.samdev.course_management_microservice.Request.UnitRequest;
 import com.samdev.course_management_microservice.Response.CourseResponse;
 import com.samdev.course_management_microservice.Service.CourseManagementService;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -134,19 +123,26 @@ public class CourseManagementServiceImpl implements CourseManagementService {
 
     @Override
     public CourseResponse deleteUnit(Long id) {
-        if(id == null){
+        if(id == null)
             throw new InvalidUnitIdException("Invalid unit id passed");
-        }
+        if(!unitRepository.existsById(id))
+            throw new UnitDoesNotExistException("Unit does not exist");
         unitRepository.deleteById(id);
         courseResponse.setStatusMessage("Unit deleted successfully!");
         courseResponse.setStatusCode(200);
         return courseResponse;
     }
 
+    @Transactional
     @Override
     public CourseResponse deleteMultipleUnits(Map<Integer, Integer> unitInfo) {
         if(unitInfo.isEmpty())
             throw new MapInformationException("No units in the map provided!");
+
+        boolean allExist = unitInfo.values().stream()
+                .allMatch(integer -> unitRepository.existsById(Long.valueOf(integer)));
+        if(!allExist)
+            throw new UnitDoesNotExistException("One or more passed units do not exist");
 
         boolean allDeleted = unitInfo.values()
                 .stream()
@@ -161,7 +157,17 @@ public class CourseManagementServiceImpl implements CourseManagementService {
                 .reduce((deletion1, deletion2) -> deletion1 && deletion2)
                 .orElse(false);
 
-        return null;
+
+
+        if (allDeleted){
+            courseResponse.setStatusMessage("Selected units deleted successfully!");
+            courseResponse.setStatusCode(200);
+            return courseResponse;
+        }else{
+            courseResponse.setStatusMessage("Error occurred while deleting the units");
+            courseResponse.setStatusCode(400);
+            return courseResponse;
+        }
     }
 
     @Override

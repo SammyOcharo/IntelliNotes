@@ -1,5 +1,6 @@
 package com.samdev.course_management_microservice.Mapper;
 
+import com.samdev.course_management_microservice.AWS.AwsUtil;
 import com.samdev.course_management_microservice.Entity.Course;
 import com.samdev.course_management_microservice.Entity.Unit;
 import com.samdev.course_management_microservice.Request.CourseRequest;
@@ -9,6 +10,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CourseMapper {
+    private final AwsUtil awsUtil;
+
+    public CourseMapper(AwsUtil awsUtil) {
+        this.awsUtil = awsUtil;
+    }
+
     public Course toCourse(CourseRequest courseRequest) {
 
         Course course = new Course();
@@ -20,6 +27,7 @@ public class CourseMapper {
 
     public CourseResponse toCourseMapper(Course course) {
         CourseRequest courseRequest = new CourseRequest();
+        courseRequest.setCourseId(course.getCourseId());
         courseRequest.setCourseName(course.getCourseName());
 
         CourseResponse courseResponse = new CourseResponse();
@@ -30,7 +38,9 @@ public class CourseMapper {
 
     public CourseResponse toUnitMapper(Unit unit) {
         UnitRequest unitRequest = new UnitRequest();
+        unitRequest.setId(unit.getUnitId());
         unitRequest.setUnitCode(unit.getUnitCode());
+        unitRequest.setOutline(awsUtil.generatePresignedUrl(unit.getUnitOutlineUrl(),30).toString());
         unitRequest.setUnitName(unit.getUnitName());
 
         CourseResponse courseResponse = new CourseResponse();

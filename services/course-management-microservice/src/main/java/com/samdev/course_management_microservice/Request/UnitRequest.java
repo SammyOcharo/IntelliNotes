@@ -1,8 +1,14 @@
 package com.samdev.course_management_microservice.Request;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.samdev.course_management_microservice.Entity.Course;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
+@SuppressWarnings("unused")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UnitRequest {
+    private Long id;
     private String unitCode;
     private String unitName;
     private Course course;
@@ -14,12 +20,13 @@ public class UnitRequest {
     public UnitRequest() {
     }
 
-    public UnitRequest(String unitCode, String unitName, Course course, byte[] courseOutline, Long courseId, String outline) {
+    public UnitRequest(Long id, String unitCode, String unitName, Course course, Long courseId, byte[] courseOutline, String outline) {
+        this.id = id;
         this.unitCode = unitCode;
         this.unitName = unitName;
         this.course = course;
-        this.courseOutline = courseOutline;
         this.courseId = courseId;
+        this.courseOutline = courseOutline;
         this.outline = outline;
     }
 
@@ -69,5 +76,13 @@ public class UnitRequest {
 
     public void setCourseOutline(byte[] courseOutline) {
         this.courseOutline = courseOutline;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @SuppressWarnings("unused")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CourseRequest {
+    private Long courseId;
     private String courseName;
     private String unitCode;
     private String unitName;
@@ -44,4 +45,11 @@ public class CourseRequest {
         this.unitName = unitName;
     }
 
+    public Long getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(Long courseId) {
+        this.courseId = courseId;
+    }
 }
