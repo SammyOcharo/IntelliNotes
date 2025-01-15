@@ -83,4 +83,24 @@ public class GlobalExceptionHandlers {
         return new ResponseEntity<>(courseResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(StudentDoesNotExistException.class)
+    public ResponseEntity<CourseResponse> StudentDoesNotExistException(StudentDoesNotExistException studentDoesNotExistException){
+        CourseResponse courseResponse = new CourseResponse();
+        courseResponse.setStatusCode(404);
+        courseResponse.setStatusMessage(studentDoesNotExistException.getMessage());
+
+        return new ResponseEntity<>(courseResponse, HttpStatus.NOT_FOUND);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 }

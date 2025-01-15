@@ -1,6 +1,7 @@
 package com.samdev.student_microservice.Mappers;
 
 import com.samdev.student_microservice.Request.StudentRequest;
+import com.samdev.student_microservice.Response.StudentDTOResponse;
 import com.samdev.student_microservice.Response.StudentResponse;
 import com.samdev.student_microservice.Entity.Student;
 import org.springframework.stereotype.Service;
@@ -13,5 +14,15 @@ public class StudentRequestMapper {
         student.setFirstName(courseRequest.getFirstName());
         student.setLastName(courseRequest.getLastName());
         return student;
+    }
+
+
+    public StudentDTOResponse toStudentDTO(Student student) {
+        return new StudentDTOResponse(
+                student.getId(),
+                student.getFirstName(),
+                student.getLastName(),
+                student.getEmail()
+        );
     }
 }

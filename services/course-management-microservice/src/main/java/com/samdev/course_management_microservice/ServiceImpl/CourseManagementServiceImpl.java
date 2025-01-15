@@ -1,6 +1,9 @@
 package com.samdev.course_management_microservice.ServiceImpl;
 
 import com.samdev.course_management_microservice.AWS.AwsUtil;
+import com.samdev.course_management_microservice.ContentGenOpenFeign.ConfirmStudentInfo;
+import com.samdev.course_management_microservice.ContentGenOpenFeign.PdfReceiverClient;
+import com.samdev.course_management_microservice.ContentGenOpenFeign.StudentOpenFeignResponse;
 import com.samdev.course_management_microservice.Entity.Course;
 import com.samdev.course_management_microservice.Exceptions.*;
 import com.samdev.course_management_microservice.Mapper.CourseMapper;
@@ -20,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @Slf4j
@@ -30,12 +34,16 @@ public class CourseManagementServiceImpl implements CourseManagementService {
     private final CourseMapper mapper;
     private final UnitRepository unitRepository;
     private final AwsUtil awsUtil;
+    private final PdfReceiverClient pdfReceiverClient;
+    private final ConfirmStudentInfo confirmStudentInfo;
 
-    public CourseManagementServiceImpl(CourseManagementRepository courseManagementRepository, CourseMapper mapper, UnitRepository unitRepository, AwsUtil awsUtil) {
+    public CourseManagementServiceImpl(CourseManagementRepository courseManagementRepository, CourseMapper mapper, UnitRepository unitRepository, AwsUtil awsUtil, PdfReceiverClient pdfReceiverClient, ConfirmStudentInfo confirmStudentInfo) {
         this.courseManagementRepository = courseManagementRepository;
         this.mapper = mapper;
         this.unitRepository = unitRepository;
         this.awsUtil = awsUtil;
+        this.pdfReceiverClient = pdfReceiverClient;
+        this.confirmStudentInfo = confirmStudentInfo;
     }
 
     CourseResponse courseResponse = new CourseResponse();
@@ -49,6 +57,19 @@ public class CourseManagementServiceImpl implements CourseManagementService {
             throw new InvalidCourseEntryException("Invalid course entered");
 
         log.info("This is the course request object, {}", courseRequest.getCourseName());
+
+        //todo send a post request to student microservice to check whether the student exists
+        try{
+            confirmStudentInfo.findStudentById(courseRequest.getStudentId());
+
+        }catch (StudentDoesNotExistException e){
+            throw new StudentDoesNotExistException("Student does not exist!");
+        }catch (Exception e){
+            courseResponse.setStatusCode(500);
+            courseResponse.setStatusMessage("An error has occurred!");
+
+            return courseResponse;
+        }
 
         courseManagementRepository.save(mapper.toCourse(courseRequest));
         courseResponse.setStatusCode(200);
@@ -77,34 +98,52 @@ public class CourseManagementServiceImpl implements CourseManagementService {
 
     @Override
     public CourseResponse registerUnit(String unitCode, String unitName, Long courseId, MultipartFile courseOutline) {
-        log.info("This is the unit code: {}",unitCode);
-        if(!courseManagementRepository.existsById(courseId))
-            throw new CourseDoesNotExistException("Course selected does not exists!");
+        log.info("This is the unit code: {}", unitCode);
 
-        if(unitRepository.existsByUnitCode(unitCode))
+        if (!courseManagementRepository.existsById(courseId)) {
+            throw new CourseDoesNotExistException("Course selected does not exist!");
+        }
+
+        if (unitRepository.existsByUnitCode(unitCode)) {
             throw new UnitExistException("Unit already exists!");
+        }
 
-        //todo set up connection to AWS S3 to safe the course outline.
+        // Save file to AWS S3
         String filePath = awsUtil.saveCourseToS3(courseOutline);
 
+        // Send the file to content-generation microservice asynchronously
+        pdfReceiverClient.uploadPdf(courseOutline);
+
+        //send an async request with openFeign to content generation microservice
+        CompletableFuture.runAsync(() ->{
+                pdfReceiverClient.uploadPdf(courseOutline);
+                System.out.println("The pdf has been sent to content generation microservice");
+            }
+
+        );
+
+        // Proceed with business logic
         UnitRequest unitRequest = new UnitRequest();
         unitRequest.setUnitName(unitName);
         unitRequest.setUnitCode(unitCode);
         unitRequest.setCourseId(courseId);
         unitRequest.setOutline(filePath);
 
-        Course course = courseManagementRepository.findById(courseId).get();
+        Course course = courseManagementRepository.findById(courseId)
+                .orElseThrow(() -> new CourseDoesNotExistException("Course selected does not exist!"));
 
         unitRepository.save(mapper.ToUnit(unitCode, unitName, courseId, filePath, course));
 
-        //todo presign the aws s3 bucket for visibility.
+        // Generate presigned URL
         URL presignedUrl = awsUtil.generatePresignedUrl(filePath, 30);
         unitRequest.setOutline(presignedUrl.toString());
 
-
+        // Prepare response
+        CourseResponse courseResponse = new CourseResponse();
         courseResponse.setStatusMessage("Unit uploaded successfully!");
         courseResponse.setUnit(unitRequest);
         courseResponse.setStatusCode(200);
+
         return courseResponse;
     }
 
