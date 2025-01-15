@@ -5,11 +5,13 @@ import com.samdev.course_management_microservice.Response.CourseResponse;
 import com.samdev.course_management_microservice.Service.CourseManagementService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/course-management")

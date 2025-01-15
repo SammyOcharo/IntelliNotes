@@ -27,3 +27,8 @@ aws:
     bucketName: ${BUCKET_NAME}
     accessKey: ${ACCESS_KEY}
     secretKey: ${SECRET_KEY}
+
+application:
+  config:
+    content-generation: ${APPLICATION_CONFIG_CONTENT_GENERATION}
+    studentUrl: ${APPLICATION_CONFIG_STUDENTURL}

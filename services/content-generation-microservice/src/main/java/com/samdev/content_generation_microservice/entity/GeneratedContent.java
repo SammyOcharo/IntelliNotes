@@ -20,15 +20,17 @@ public class GeneratedContent {
     private String generatedNotes;
     @Column(name="summary_notes", columnDefinition = "TEXT")
     private String summary;
+    @OneToMany(mappedBy = "generatedContent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> revisionQuestions;
     private String status;
     @CreatedDate
     private LocalDate generatedDate;
+    private Integer studentId;
 
     public GeneratedContent() {
     }
 
-    public GeneratedContent(Long id, Long courseOutlineId, String generatedNotes, String summary, List<Question> revisionQuestions, String status, LocalDate generatedDate) {
+    public GeneratedContent(Long id, Long courseOutlineId, String generatedNotes, String summary, List<Question> revisionQuestions, String status, LocalDate generatedDate, Integer studentId) {
         this.id = id;
         this.courseOutlineId = courseOutlineId;
         this.generatedNotes = generatedNotes;
@@ -36,6 +38,17 @@ public class GeneratedContent {
         this.revisionQuestions = revisionQuestions;
         this.status = status;
         this.generatedDate = generatedDate;
+        this.studentId = studentId;
+    }
+
+
+
+    public Integer getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(Integer studentId) {
+        this.studentId = studentId;
     }
 
     public Long getId() {

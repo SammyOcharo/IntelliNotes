@@ -21,3 +21,7 @@ spring:
 
 server:
   port: ${SERVER_PORT}
+
+application:
+  config:
+    url: ${APPLICATION_CONFIG_URL}

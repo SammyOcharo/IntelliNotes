@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "revision_question")
 public class Question {
+    @Id
+    @GeneratedValue
     private Long id;
     private String content;
     @Lob
@@ -13,16 +15,28 @@ public class Question {
     @Enumerated(EnumType.STRING)
     private Difficulty difficulty;
     private String relatedTopic;
+    @ManyToOne
+    @JoinColumn(name = "generated_content_id", nullable = false)
+    private GeneratedContent generatedContent;
 
     public Question() {
     }
 
-    public Question(Long id, String content, String solution, Difficulty difficulty, String relatedTopic) {
+    public Question(Long id, String content, String solution, Difficulty difficulty, String relatedTopic, GeneratedContent generatedContent) {
         this.id = id;
         this.content = content;
         this.solution = solution;
         this.difficulty = difficulty;
         this.relatedTopic = relatedTopic;
+        this.generatedContent = generatedContent;
+    }
+
+    public GeneratedContent getGeneratedContent() {
+        return generatedContent;
+    }
+
+    public void setGeneratedContent(GeneratedContent generatedContent) {
+        this.generatedContent = generatedContent;
     }
 
     public Long getId() {

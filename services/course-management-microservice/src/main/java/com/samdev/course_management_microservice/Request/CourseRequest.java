@@ -7,12 +7,19 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @SuppressWarnings("unused")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CourseRequest {
+    private String studentId;
     private Long courseId;
     private String courseName;
     private String unitCode;
     private String unitName;
 
+    public String getStudentId() {
+        return studentId;
+    }
 
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
+    }
 
     public CourseRequest() {
     }
