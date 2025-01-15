@@ -39,12 +39,13 @@ public class ContentGenerationServiceImpl implements ContentGenerationService {
     @Override
     public String processPdf(MultipartFile file) {
         //todo call to course-management microservice to get the image.
+        log.info("Image reached at content generation...");
 
         //todo call openAI microservice to do the processing.
 
         //todo save the processed information to the database.
 
-        log.info("Image reached at content generation...");
+        // todo add a counter if more than 5 searches send request to payments
 
         return "";
     }
