@@ -27,3 +27,9 @@ mpesa:
   TransactionType: ${TRANSACTION_TYPE}
   stkPushUrl: ${STKPUSH_URL}
   passkey: ${PASS_KEY}
+
+stripe:
+  stripeApiKey: ${STRIPE_API_KEY}
+
+system:
+  clientBaseURL: ${CLIENT_BASE_URL}

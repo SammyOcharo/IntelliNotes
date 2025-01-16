@@ -3,6 +3,7 @@ package com.samdev.payment_microservice.controller;
 import com.samdev.payment_microservice.request.PaymentRequest;
 import com.samdev.payment_microservice.response.PaymentResponse;
 import com.samdev.payment_microservice.service.PaymentService;
+import com.stripe.exception.StripeException;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +25,7 @@ public class Payment {
     }
 
     @PostMapping("/initiate/")
-    public ResponseEntity<PaymentResponse> initiatePayment(@RequestBody @Valid PaymentRequest paymentRequest) throws IOException, URISyntaxException, InterruptedException {
+    public ResponseEntity<PaymentResponse> initiatePayment(@RequestBody @Valid PaymentRequest paymentRequest) throws IOException, URISyntaxException, InterruptedException, StripeException {
         return ResponseEntity.ok(paymentService.initiatePayment(paymentRequest));
     }
 }
