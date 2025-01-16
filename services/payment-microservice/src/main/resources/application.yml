@@ -13,3 +13,17 @@ spring:
       ddl-auto: update
 server:
   port: ${SERVER_PORT}
+
+application:
+  config:
+    studentUrl: ${APPLICATION_CONFIG_STUDENTURL}
+
+mpesa:
+  clientId: ${CLIENT_ID}
+  ClientSecret: ${CLIENT_SECRET}
+  authUrl: ${AUTH_URL}
+  businessShortCode: ${BUSINESS_SHORT_CODE}
+  CallBackURL: ${CALLBACK_URL}
+  TransactionType: ${TRANSACTION_TYPE}
+  stkPushUrl: ${STKPUSH_URL}
+  passkey: ${PASS_KEY}
