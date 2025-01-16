@@ -21,6 +21,7 @@ public class Payment {
     private String phoneNumber;
     private String merchantRequestID;
     private String checkoutRequestID;
+    private boolean isSuccessful=false;
 
     public Payment() {
     }
@@ -33,7 +34,7 @@ public class Payment {
             PaymentOption paymentOption,
             String phoneNumber,
             String merchantRequestID,
-            String checkoutRequestID) {
+            String checkoutRequestID, Boolean isSuccessful) {
         this.id = id;
         this.transactionReference = transactionReference;
         this.transactionAmount = transactionAmount;
@@ -42,6 +43,7 @@ public class Payment {
         this.phoneNumber = phoneNumber;
         this.merchantRequestID = merchantRequestID;
         this.checkoutRequestID = checkoutRequestID;
+        this.isSuccessful = isSuccessful;
     }
 
     public Long getId() {
@@ -74,6 +76,14 @@ public class Payment {
 
     public String getCheckoutRequestID() {
         return checkoutRequestID;
+    }
+
+    public boolean isSuccessful() {
+        return isSuccessful;
+    }
+
+    public void setSuccessful(boolean successful) {
+        isSuccessful = successful;
     }
 
     public void setMerchantRequestID(String merchantRequestID) {

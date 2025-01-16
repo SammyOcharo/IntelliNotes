@@ -1,6 +1,11 @@
 package com.samdev.payment_microservice.mpesa;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.samdev.payment_microservice.entity.Payment;
+import com.samdev.payment_microservice.entity.PaymentOption;
+import com.samdev.payment_microservice.repository.PaymentRepository;
 import okhttp3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +31,11 @@ public class MpesaTransact {
 
 
     private static final Logger log = LoggerFactory.getLogger(MpesaTransact.class);
+    private static PaymentRepository paymentRepository;
+
+    public MpesaTransact(PaymentRepository paymentRepository) {
+        this.paymentRepository = paymentRepository;
+    }
 
     public static String getInstantTime(){
         Instant now = Instant.now();
@@ -132,6 +142,8 @@ public class MpesaTransact {
                 return false;
             } else {
                 System.out.println("Response: " + responseBody);
+
+                saveResponseToDB(responseBody, amount, phoneNumber, accountReference);
                 return true;
             }
         } catch (Exception e) {
@@ -140,5 +152,22 @@ public class MpesaTransact {
 
 
         return false;
+    }
+
+    private static void saveResponseToDB(String responseBody, String amount, String phoneNumber, String accountReference) {
+        JsonObject jsonObject = JsonParser.parseString(responseBody).getAsJsonObject();
+        String merchantRequestID = jsonObject.get("MerchantRequestID").getAsString();
+        String checkoutRequestID = jsonObject.get("CheckoutRequestID").getAsString();
+        System.out.println("MerchantRequestID: " + merchantRequestID);
+
+        Payment payment = new Payment();
+        payment.setPaymentOption(PaymentOption.MPESA);
+        payment.setTransactionAmount(Double.valueOf(amount));
+        payment.setMerchantRequestID(merchantRequestID);
+        payment.setCheckoutRequestID(checkoutRequestID);
+        payment.setTransactionReference(accountReference);
+        payment.setPhoneNumber(phoneNumber);
+        paymentRepository.save(payment);
+
     }
 }
