@@ -13,6 +13,7 @@ public class StudentRequestMapper {
         student.setEmail(courseRequest.getEmail());
         student.setFirstName(courseRequest.getFirstName());
         student.setLastName(courseRequest.getLastName());
+        student.setPhoneNumber(courseRequest.getPhoneNumber());
         return student;
     }
 
@@ -22,7 +23,8 @@ public class StudentRequestMapper {
                 student.getId(),
                 student.getFirstName(),
                 student.getLastName(),
-                student.getEmail()
+                student.getEmail(),
+                student.getPhoneNumber()
         );
     }
 }
