@@ -4,6 +4,7 @@ package com.samdev.student_microservice.Request;
 public class StudentRequest {
     private String id;
     private String firstName;
+    private String phoneNumber;
     private String lastName;
     private Integer otp;
 
@@ -20,14 +21,23 @@ public class StudentRequest {
     public StudentRequest() {
     }
 
-    public StudentRequest(String firstName, String lastName, String email) {
+    public StudentRequest(String firstName, String lastName, String email, String phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.phoneNumber = phoneNumber;
     }
 
     public Integer getOtp() {
         return otp;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public void setOtp(Integer otp) {

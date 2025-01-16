@@ -72,6 +72,7 @@ public class PaymentServiceImpl implements PaymentService {
 
                 StudentOpenFeignResponse studentById = confirmStudentInfo.findStudentById(paymentRequest.studentId());
                 phoneNumber = studentById.phoneNumber();
+                log.info("This is the phoneNumber of the student: {}", studentById);
 
 
             } else{
