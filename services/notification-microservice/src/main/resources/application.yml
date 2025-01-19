@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: ${SPRING_APPLICATION_NAME}
+
+  kafka:
+    consumer:
+      bootstrap-servers: ${KAFKA_CONSUMER_BOOTSTRAP_SERVER}
+      group-id: ${KAFKA_CONSUMER_GROUP_ID}
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: com.samdev.notification_microservice.kafka.PaymentJsonRequestDeserializer
+      properties:
+        spring.json.type.mapping: paymentJsonRequestSerializer:com.samdev.notification_microservice.request.PaymentJsonRequestSerializer
+
+  data:
+    mongodb:
+      host: ${MONGODB_HOST}
+      port: ${MONGODB_PORT}
+      database: ${MONGODB_DATABASE}
+      username: ${MONGODB_USERNAME}
+      password: ${MONGODB_PASSWORD}
+
+server:
+    port: ${SERVER_PORT}
