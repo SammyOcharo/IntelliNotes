@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import com.samdev.payment_microservice.entity.Payment;
 import com.samdev.payment_microservice.entity.PaymentOption;
 import com.samdev.payment_microservice.repository.PaymentRepository;
+import com.samdev.payment_microservice.request.PaymentRequest;
 import okhttp3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,7 +93,8 @@ public class MpesaTransact {
             String callBackUrl,
             String transactionType,
             String requestURL,
-            String passkey, String accountReference) throws IOException, URISyntaxException, InterruptedException {
+            String passkey,
+            String accountReference) throws IOException, URISyntaxException, InterruptedException {
 
         String password = generatePassword(businessShortCode, passkey, getInstantTime());
 
@@ -132,6 +134,7 @@ public class MpesaTransact {
             if (!response.isSuccessful()) {
                 System.out.println("Request failed: " + response.code() + " " + response.message());
                 System.out.println("Error body: " + responseBody);
+
                 return false;
             } else {
                 System.out.println("Response: " + responseBody);

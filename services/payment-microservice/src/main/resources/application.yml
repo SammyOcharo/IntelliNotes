@@ -1,6 +1,16 @@
 spring:
   application:
     name: ${SERVER_APPLICATION_NAME}
+
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: com.samdev.payment_microservice.kafka.PaymentJsonRequestSerializer
+      properties:
+        spring.json.type.mapping: paymentJsonRequestSerializer:com.samdev.payment_microservice.kafka.PaymentJsonRequestSerializer
+
+
   datasource:
     url: jdbc:mysql://localhost:3306/${DB_NAME}
     username: ${MYSQL_USERNAME}

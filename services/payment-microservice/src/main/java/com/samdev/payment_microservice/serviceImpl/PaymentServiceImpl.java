@@ -4,6 +4,7 @@ import com.samdev.payment_microservice.ContentGenOpenFeign.ConfirmStudentInfo;
 import com.samdev.payment_microservice.ContentGenOpenFeign.StudentOpenFeignResponse;
 import com.samdev.payment_microservice.Util.UniqueCodeGenerator;
 import com.samdev.payment_microservice.entity.Subscription;
+import com.samdev.payment_microservice.kafka.PaymentJsonRequest;
 import com.samdev.payment_microservice.mpesa.MpesaTransact;
 import com.samdev.payment_microservice.repository.SubscriptionRepository;
 import com.samdev.payment_microservice.request.PaymentRequest;
@@ -19,6 +20,7 @@ import com.stripe.model.Customer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -54,6 +56,11 @@ public class PaymentServiceImpl implements PaymentService {
     @Value("${stripe.stripeApiKey}")
     private String stripeAPiKey;
 
+    private static final String TOPIC = "payments";
+
+
+    private final KafkaTemplate<String, PaymentJsonRequest> kafkaTemplate;
+
 
     private static final Logger log = LoggerFactory.getLogger(PaymentServiceImpl.class);
     private final PaymentRepository paymentRepository;
@@ -64,7 +71,8 @@ public class PaymentServiceImpl implements PaymentService {
     private final SubscriptionRepository subscriptionRepository;
     private final InitiatePayment initiatePayment;
 
-    public PaymentServiceImpl(PaymentRepository paymentRepository, MpesaTransact mpesaTransact, ConfirmStudentInfo confirmStudentInfo, UniqueCodeGenerator uniqueCodeGenerator, CustomerUtil customerUtil, SubscriptionRepository subscriptionRepository, InitiatePayment initiatePayment) {
+    public PaymentServiceImpl(KafkaTemplate<String, PaymentJsonRequest> kafkaTemplate, PaymentRepository paymentRepository, MpesaTransact mpesaTransact, ConfirmStudentInfo confirmStudentInfo, UniqueCodeGenerator uniqueCodeGenerator, CustomerUtil customerUtil, SubscriptionRepository subscriptionRepository, InitiatePayment initiatePayment) {
+        this.kafkaTemplate = kafkaTemplate;
         this.paymentRepository = paymentRepository;
         this.mpesaTransact = mpesaTransact;
         this.confirmStudentInfo = confirmStudentInfo;
@@ -114,7 +122,17 @@ public class PaymentServiceImpl implements PaymentService {
                     requestURL,
                     passkey, accountReference
             )){
+                //todo send a message notification to notification microservice via kafka
 
+                PaymentJsonRequest paymentInfo = new PaymentJsonRequest(
+                        "mpesa",
+                        paymentRequest.transactionAmount(),
+                        phoneNumber,
+                        paymentRequest.studentId(),
+                        email
+                );
+
+                kafkaTemplate.send(TOPIC, paymentInfo);
                 return new PaymentResponse(
                         "Success. Request accepted for processing",
                         "200",
@@ -134,6 +152,18 @@ public class PaymentServiceImpl implements PaymentService {
             String s = initiatePayment.initiateToStripe(customer, subscription);
 
             log.info("This is generated payment url: {}", s);
+            //todo send a message notification to notification microservice via kafka
+
+            PaymentJsonRequest paymentInfo = new PaymentJsonRequest(
+                    "stripe",
+                    paymentRequest.transactionAmount(),
+                    phoneNumber,
+                    paymentRequest.studentId(),
+                    email
+
+            );
+
+            kafkaTemplate.send(TOPIC, paymentInfo);
 
             return new PaymentResponse(
                     "Success. Request accepted for processing",
