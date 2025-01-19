@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import com.samdev.payment_microservice.entity.Payment;
 import com.samdev.payment_microservice.entity.PaymentOption;
 import com.samdev.payment_microservice.repository.PaymentRepository;
+import com.samdev.payment_microservice.request.PaymentRequest;
 import okhttp3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,7 +83,6 @@ public class MpesaTransact {
 
     }
 
-
     public static boolean initiateTransaction(
             String phoneNumber,
             String businessShortCode,
@@ -93,11 +93,10 @@ public class MpesaTransact {
             String callBackUrl,
             String transactionType,
             String requestURL,
-            String passkey, String accountReference) throws IOException, URISyntaxException, InterruptedException {
+            String passkey,
+            String accountReference) throws IOException, URISyntaxException, InterruptedException {
 
         String password = generatePassword(businessShortCode, passkey, getInstantTime());
-
-        log.info("This is the generated password: {}", password);
 
         OkHttpClient client = new OkHttpClient();
 
@@ -114,8 +113,6 @@ public class MpesaTransact {
         requestBodyMap.put("AccountReference", accountReference);
         requestBodyMap.put("TransactionDesc", "Payment of IntelliNotes");
 
-        log.info("This is the generated payload: {}", requestBodyMap);
-
         // Convert the HashMap to a JSON string
         Gson gson = new Gson();
         String jsonBody = gson.toJson(requestBodyMap);
@@ -123,8 +120,6 @@ public class MpesaTransact {
         // Set the JSON body to the request
         MediaType mediaType = MediaType.parse("application/json");
         RequestBody body = RequestBody.create(mediaType, jsonBody);
-
-        log.info("This is the token: {}", generateToken(ClientId, ClientSecret, auth));
 
         Request request = new Request.Builder()
                 .url(requestURL)
@@ -139,6 +134,7 @@ public class MpesaTransact {
             if (!response.isSuccessful()) {
                 System.out.println("Request failed: " + response.code() + " " + response.message());
                 System.out.println("Error body: " + responseBody);
+
                 return false;
             } else {
                 System.out.println("Response: " + responseBody);
@@ -158,7 +154,6 @@ public class MpesaTransact {
         JsonObject jsonObject = JsonParser.parseString(responseBody).getAsJsonObject();
         String merchantRequestID = jsonObject.get("MerchantRequestID").getAsString();
         String checkoutRequestID = jsonObject.get("CheckoutRequestID").getAsString();
-        System.out.println("MerchantRequestID: " + merchantRequestID);
 
         Payment payment = new Payment();
         payment.setPaymentOption(PaymentOption.MPESA);

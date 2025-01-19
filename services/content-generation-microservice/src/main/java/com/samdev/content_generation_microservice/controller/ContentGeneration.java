@@ -1,12 +1,8 @@
 package com.samdev.content_generation_microservice.controller;
 
-import com.samdev.content_generation_microservice.request.ContentGenerationRequest;
 import com.samdev.content_generation_microservice.response.ContentGenerationResponse;
 import com.samdev.content_generation_microservice.service.ContentGenerationService;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
